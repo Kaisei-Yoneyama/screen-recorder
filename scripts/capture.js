@@ -1,7 +1,7 @@
 'use strict';
 
 // 画面共有設定フォーム
-const settingsFrom = document.getElementById('settings-from');
+const settingsForm = document.getElementById('settings-form');
 
 // プレビュー
 const preview = document.getElementById('preview');
@@ -11,7 +11,7 @@ const modal = document.getElementById('controller');
 const bootstrapModalInstance = new bootstrap.Modal(modal);
 
 // キャプチャボタンを押したとき
-settingsFrom.addEventListener('submit', (event) => {
+settingsForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
   const form = event.target;
@@ -109,7 +109,7 @@ function stopCapture() {
   preview.srcObject = null;
 
   // フォームをリセットする
-  settingsFrom.reset();
+  settingsForm.reset();
 
   console.info('[INFO] キャプチャを終了しました。');
 }
