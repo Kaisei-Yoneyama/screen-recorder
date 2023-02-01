@@ -1,10 +1,18 @@
 'use strict';
 
+// ダウンロードボタン
+const downloadButton = document.getElementById('download-button');
+
 // 収録開始、一時停止、収録停止ボタン
 const recordButton = document.getElementById('record-button');
 const pauseButton = document.getElementById('pause-button');
 const pauseLabel = document.getElementById('pause-label');
 const stopButton = document.getElementById('stop-button');
+
+// ダウンロードボタンをクリックしたとき
+downloadButton.addEventListener('click', () => {
+  if (recorder && chunks) download();
+});
 
 // 収録開始ボタンをクリックしたとき
 recordButton.addEventListener('click', () => {
@@ -28,15 +36,15 @@ let chunks;
 /**
  * 画面収録を開始する
  * @param {MediaStream} stream
- * @param {string} [mimeType='video/webm;codecs=vp8']
+ * @param {MediaRecorderOptions} [options]
  */
-function startRecording(stream, mimeType = 'video/webm;codecs=vp8') {
+function startRecording(stream, options = { mimeType: 'video/webm;codecs=vp8,opus', videoBitsPerSecond: 2500000, audioBitsPerSecond: 128000 }) {
   // 収録された細切れのデータを入れる
   chunks = [];
 
   try {
     // 指定した MIME タイプに対応していない場合は NotSupportedError になる
-    recorder = new MediaRecorder(stream, { mimeType });
+    recorder = new MediaRecorder(stream, options);
   } catch (error) {
     if (error.name === 'NotSupportedError') {
       alert('指定された MIME タイプに対応していません。');
@@ -63,7 +71,8 @@ function startRecording(stream, mimeType = 'video/webm;codecs=vp8') {
   recorder.addEventListener('start', () => {
     console.info('[INFO] 収録を開始しました。');
 
-    // ボタンの状態を切り替える
+    //ボタンの状態を切り替える
+    downloadButton.disabled = true;
     recordButton.disabled = true;
     pauseButton.disabled = false;
     stopButton.disabled = false;
@@ -88,10 +97,10 @@ function startRecording(stream, mimeType = 'video/webm;codecs=vp8') {
   // 収録停止イベント
   recorder.addEventListener('stop', () => {
     console.info('[INFO] 収録を停止しました。');
-    download();
 
     // ボタンをリセットする
     pauseLabel.innerHTML = '<i class="bi bi-pause-circle"></i> 一時停止';
+    downloadButton.disabled = false;
     recordButton.disabled = false;
     pauseButton.disabled = true;
     stopButton.disabled = true;
@@ -136,10 +145,13 @@ function download() {
   anchor.click();
 
   URL.revokeObjectURL(url);
+  anchor.remove();
+
   console.info('[INFO] ダウンロードしました。', file);
 }
 
 const extensions = new Map([
+  [ 'video/x-matroska', 'mkv' ],
   [ 'video/webm', 'webm' ],
   [ 'video/mp4', 'mp4' ]
 ]);
@@ -149,8 +161,9 @@ function getExtensionFromMimeType(mimeType) {
 }
 
 const mimeTypes = [
-  // 'video/mp4;codecs=h264,aac',
+  'video/x-matroska;codecs=avc1,opus',
   'video/webm;codecs=h264,opus',
   'video/webm;codecs=vp8,opus',
-  'video/webm;codecs=vp9,opus'
+  'video/webm;codecs=vp9,opus',
+  'video/mp4;codecs=h264,aac'
 ];

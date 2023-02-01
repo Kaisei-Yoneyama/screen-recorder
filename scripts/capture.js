@@ -1,7 +1,7 @@
 'use strict';
 
 // 画面共有設定フォーム
-const settingsFrom = document.getElementById('capture');
+const settingsFrom = document.getElementById('settings-from');
 
 // プレビュー
 const preview = document.getElementById('preview');
@@ -19,16 +19,36 @@ settingsFrom.addEventListener('submit', (event) => {
 
   const [ width, height ] = formData.get('resolution').split('x');
   const frameRate = formData.get('frame-rate');
-  const audio = formData.get('audio');
+
+  const sampleRate = formData.get('sample-rate');
 
   const options = {
-    audio: !!(audio),
     video: {
-      // aspectRatio: { ideal: 16 / 9 },
+      // アスペクト比
+      aspectRatio: { ideal: 16 / 9 },
+
+      // 解像度
       width: { ideal: parseInt(width) },
       height: { ideal: parseInt(height) },
-      frameRate: { ideal: parseInt(frameRate) }
-    }
+
+      // フレームレート
+      frameRate: { ideal: parseInt(frameRate) },
+
+      // 共有画面選択時にタブを優先的に表示する
+      displaySurface: 'browser'
+    },
+    audio: {
+      // サンプリング周波数
+      sampleRate: { ideal: parseInt(sampleRate) },
+
+      // 量子化ビット数
+      sampleSize: { ideal: 24 }
+    },
+    // 共有画面の切り替えを可能にする
+    surfaceSwitching: 'include',
+
+    // 共有画面選択時に現在のタブを除外する
+    selfBrowserSurface: 'exclude'
   };
 
   startCapture(options);

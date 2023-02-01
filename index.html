@@ -12,7 +12,7 @@
     <main class="container my-5">
       <h1 class="mb-5 pb-3 border-bottom">Screen Recorder</h1>
 
-      <form id="capture">
+      <form id="settings-from">
         <label for="frame-rate" class="form-label">解像度</label>
         <select class="form-select mb-3" name="resolution">
           <option value="7680x4320">4320p (8K)</option>
@@ -26,24 +26,19 @@
 
         <label for="frame-rate" class="form-label">フレームレート</label>
         <select class="form-select mb-3" name="frame-rate">
-          <option value="24">24 fps</option>
-          <option value="30">30 fps</option>
-          <option value="60" selected>60 fps</option>
-          <option value="120">120 fps</option>
+          <option value="24">24fps</option>
+          <option value="30">30fps</option>
+          <option value="60" selected>60fps</option>
+          <option value="120">120fps</option>
         </select>
 
-        <!--
-        <label for="frame-rate" class="form-label">フォーマット</label>
-        <select class="form-select mb-3" name="mime-type">
-          <option value="video/webm" selected>WebM</option>
-          <option value="video/mp4" disabled>MP4</option>
+        <label for="frame-rate" class="form-label">サンプルレート</label>
+        <select class="form-select mb-3" name="sample-rate">
+          <option value="44100" selected>44.1kHz</option>
+          <option value="88200">88.2kHz</option>
+          <option value="96000">96kHz</option>
+          <option value="192000">192kHz</option>
         </select>
-        -->
-
-        <div class="form-check form-switch mb-3">
-          <input class="form-check-input" type="checkbox" name="audio" checked>
-          <label class="form-check-label" for="audio">内部音声</label>
-        </div>
 
         <button type="submit" class="btn btn-primary"><i class="bi bi-cast"></i> キャプチャ</button>
       </form>
@@ -56,9 +51,11 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <video id="preview" class="w-100 my-3" controls autoplay></video>
+              <video id="preview" class="img-thumbnail w-100" controls autoplay></video>
             </div>
             <div class="modal-footer">
+              <button id="download-button" type="button" class="btn btn-secondary" disabled><i class="bi bi-download"></i> ダウンロード</button>
+
               <div class="btn-group my-3" role="group">
                 <button id="record-button" type="button" class="btn btn-primary"><i class="bi bi-record-circle"></i> 収録開始</button>
 
